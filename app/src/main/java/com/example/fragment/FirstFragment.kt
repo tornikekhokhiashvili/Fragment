@@ -42,4 +42,5 @@ class FirstFragment : Fragment(R.layout.fragment_first) {
         fun onSwapFragments()
         fun onChangeBackgroundColors()
     }
+
 }

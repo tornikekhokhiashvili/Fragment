@@ -1,11 +1,9 @@
 package com.example.fragment
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Button
-import androidx.core.view.ViewCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import com.example.fragment.databinding.ActivityMainBinding
 import kotlin.random.Random
@@ -18,8 +16,8 @@ class MainActivity : AppCompatActivity(), FirstFragment.FragmentListener {
     private var color2 = 0
     private var isFirstLaunch = true
     private lateinit var binding:ActivityMainBinding
-    private lateinit var change: Button
-    private lateinit var swap: Button
+    var areFragmentsSwapped:Boolean=false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -60,42 +58,65 @@ class MainActivity : AppCompatActivity(), FirstFragment.FragmentListener {
     }
 
     override fun onSwapFragments() {
-        val fragment2View = findViewById<View>(R.id.fragment2_container)
-        val fragment3View = findViewById<View>(R.id.fragment3_container)
+//        val fragment2View = findViewById<View>(R.id.fragment2_container)
+//        val fragment3View = findViewById<View>(R.id.fragment3_container)
+//        val animationDuration = 500L
+//
+//        val fragment2X = fragment2View.x
+//        val fragment2Y = fragment2View.y
+//        val fragment3X = fragment3View.x
+//        val fragment3Y = fragment3View.y
+//
+//        val fragment2Animation = fragment2View.animate()
+//            .x(fragment3X)
+//            .y(fragment3Y)
+//            .setDuration(animationDuration)
+//
+//        val fragment3Animation = fragment3View.animate()
+//            .x(fragment2X)
+//            .y(fragment2Y)
+//            .setDuration(animationDuration)
+//
+//        if (isFirstLaunch) {
+//            fragment2Animation.withEndAction {
+//                supportFragmentManager.beginTransaction().apply {
+//                    detach(fragment2)
+//                    detach(fragment3)
+//                    attach(fragment2)
+//                    attach(fragment3)
+//                    commit()
+//                }
+//                fragment2View.x = fragment3X
+//                fragment2View.y = fragment3Y
+//            }.start()
+//
+//            fragment3Animation.start()
+//        } else {
+//            fragment2Animation.withEndAction {
+//                supportFragmentManager.beginTransaction().apply {
+//                    detach(fragment2)
+//                    detach(fragment3)
+//                    attach(fragment2)
+//                    attach(fragment3)
+//                    commit()
+//                }
+//            }.start()
+//
+//            fragment3Animation.start()
+//        }
+//        isFirstLaunch = !isFirstLaunch
+        val transaction = supportFragmentManager.beginTransaction()
 
-        val animationDuration = 500L // You can adjust the duration as needed
+        if (isFirstLaunch) {
+            transaction.replace(R.id.fragment2_container, ThirdFragment())
+            transaction.replace(R.id.fragment3_container, SecondFragment())
+        } else {
+            transaction.replace(R.id.fragment2_container, SecondFragment())
+            transaction.replace(R.id.fragment3_container, ThirdFragment())
+        }
+        transaction.commit()
 
-        val fragment2X = fragment2View.x
-        val fragment2Y = fragment2View.y
-
-        val fragment3X = fragment3View.x
-        val fragment3Y = fragment3View.y
-
-        fragment2View.animate()
-            .x(fragment3X)
-            .y(fragment3Y)
-            .setDuration(animationDuration)
-            .withEndAction {
-                // After the animation, swap the positions of the fragments in the layout
-                supportFragmentManager.beginTransaction().apply {
-                    detach(fragment2)
-                    detach(fragment3)
-                    attach(fragment2)
-                    attach(fragment3)
-                    commit()
-                }
-
-                // Reset the view positions
-                fragment2View.x = fragment3X
-                fragment2View.y = fragment3Y
-            }
-            .start()
-
-        fragment3View.animate()
-            .x(fragment2X)
-            .y(fragment2Y)
-            .setDuration(animationDuration)
-            .start()
+        isFirstLaunch = !isFirstLaunch
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -110,4 +131,6 @@ class MainActivity : AppCompatActivity(), FirstFragment.FragmentListener {
        binding.fragment2Container.setBackgroundColor(color1)
        binding.fragment3Container.setBackgroundColor(color2)
     }
+
+
 }
