@@ -6,22 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical">
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment1_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
-    </FrameLayout>
-    <FrameLayout
+    </androidx.fragment.app.FragmentContainerView>
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment2_container"
+        android:name="com.example.fragment.SecondFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
-    </FrameLayout>
-    <FrameLayout
+    </androidx.fragment.app.FragmentContainerView>
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment3_container"
+        android:name="com.example.fragment.ThirdFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
-    </FrameLayout>
+    </androidx.fragment.app.FragmentContainerView>
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -19,17 +19,4 @@ class SecondFragment : Fragment(R.layout.fragment_second) {
     ): View? {
         return inflater.inflate(R.layout.fragment_second, container, false)
     }
-
-    fun setRandomBackgroundColor() {
-        val randomColor = getRandomColor()
-     view?.setBackgroundColor(randomColor)
-
-    }
-
-    private fun getRandomColor(): Int {
-        val random = Random.Default
-        val color = android.graphics.Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256))
-        Log.d("ColorDebug", "Generated Color: $color")
-        return color
-    }
 }
