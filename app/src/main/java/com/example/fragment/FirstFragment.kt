@@ -29,7 +29,6 @@ class FirstFragment : Fragment(R.layout.fragment_first) {
         listener?.onChangeBackgroundColors()
     }
         swap.setOnClickListener {
-            Log.d("FirstFragment", "Swap button clicked")
             listener?.onSwapFragments()
         }
 

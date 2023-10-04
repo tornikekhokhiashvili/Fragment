@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity(), FirstFragment.FragmentListener {
     private var color2 = 0
     private var isFirstLaunch = true
     private lateinit var binding:ActivityMainBinding
-    var areFragmentsSwapped:Boolean=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,69 +51,29 @@ class MainActivity : AppCompatActivity(), FirstFragment.FragmentListener {
             color2 = savedInstanceState.getInt("color2")
             binding.fragment2Container.setBackgroundColor(color1)
             binding.fragment3Container.setBackgroundColor(color2)
+            if(!isFirstLaunch){
+                supportFragmentManager.commit {
+                    replace(binding.fragment2Container.id,ThirdFragment())
+                        replace(binding.fragment3Container.id,SecondFragment())
+                }
+            }
         }
 
 
     }
 
     override fun onSwapFragments() {
-//        val fragment2View = findViewById<View>(R.id.fragment2_container)
-//        val fragment3View = findViewById<View>(R.id.fragment3_container)
-//        val animationDuration = 500L
-//
-//        val fragment2X = fragment2View.x
-//        val fragment2Y = fragment2View.y
-//        val fragment3X = fragment3View.x
-//        val fragment3Y = fragment3View.y
-//
-//        val fragment2Animation = fragment2View.animate()
-//            .x(fragment3X)
-//            .y(fragment3Y)
-//            .setDuration(animationDuration)
-//
-//        val fragment3Animation = fragment3View.animate()
-//            .x(fragment2X)
-//            .y(fragment2Y)
-//            .setDuration(animationDuration)
-//
-//        if (isFirstLaunch) {
-//            fragment2Animation.withEndAction {
-//                supportFragmentManager.beginTransaction().apply {
-//                    detach(fragment2)
-//                    detach(fragment3)
-//                    attach(fragment2)
-//                    attach(fragment3)
-//                    commit()
-//                }
-//                fragment2View.x = fragment3X
-//                fragment2View.y = fragment3Y
-//            }.start()
-//
-//            fragment3Animation.start()
-//        } else {
-//            fragment2Animation.withEndAction {
-//                supportFragmentManager.beginTransaction().apply {
-//                    detach(fragment2)
-//                    detach(fragment3)
-//                    attach(fragment2)
-//                    attach(fragment3)
-//                    commit()
-//                }
-//            }.start()
-//
-//            fragment3Animation.start()
-//        }
-//        isFirstLaunch = !isFirstLaunch
         val transaction = supportFragmentManager.beginTransaction()
-
         if (isFirstLaunch) {
-            transaction.replace(R.id.fragment2_container, ThirdFragment())
-            transaction.replace(R.id.fragment3_container, SecondFragment())
+            transaction.replace(R.id.fragment2_container,ThirdFragment())
+                .replace(R.id.fragment3_container,SecondFragment())
+                .commit()
+
         } else {
-            transaction.replace(R.id.fragment2_container, SecondFragment())
-            transaction.replace(R.id.fragment3_container, ThirdFragment())
+            transaction.replace(R.id.fragment2_container,SecondFragment())
+                .replace(R.id.fragment3_container,ThirdFragment())
+                .commit()
         }
-        transaction.commit()
 
         isFirstLaunch = !isFirstLaunch
     }
@@ -127,10 +86,9 @@ class MainActivity : AppCompatActivity(), FirstFragment.FragmentListener {
     }
     override fun onChangeBackgroundColors() {
        color1 = android.graphics.Color.argb(255, Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
-        color2 = android.graphics.Color.argb(255, Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
+       color2 = android.graphics.Color.argb(255, Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
        binding.fragment2Container.setBackgroundColor(color1)
        binding.fragment3Container.setBackgroundColor(color2)
     }
-
 
 }

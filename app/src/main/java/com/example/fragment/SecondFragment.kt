@@ -1,11 +1,14 @@
 package com.example.fragment
 
+import android.graphics.Color
 import android.os.Bundle
+import android.renderscript.ScriptGroup.Binding
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.fragment.databinding.FragmentSecondBinding
 import kotlin.random.Random
 
 class SecondFragment : Fragment(R.layout.fragment_second) {

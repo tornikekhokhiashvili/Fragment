@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ThirdFragment"
-    android:id="@+id/fragment3_container">
+    android:id="@+id/fragment3">
 
     <TextView
         android:layout_gravity="center"
