@@ -1,45 +1,34 @@
 package com.example.fragment
-import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
+import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Button
-import androidx.fragment.app.FragmentTransaction
+import android.view.ViewGroup
+import com.example.fragment.databinding.FragmentFirstBinding
+import kotlin.random.Random
 
 class FirstFragment : Fragment(R.layout.fragment_first) {
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
+    private lateinit var binding: FragmentFirstBinding
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentFirstBinding.inflate(inflater, container, false)
+    binding.ChangeColor.setOnClickListener {
+        val randomColor1=generateRandomColor()
+        val randomColor2=generateRandomColor()
+        val mainActivity =requireActivity() as MainActivity
+        mainActivity.onChangeFragmentColor(randomColor1,randomColor2)
     }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is FragmentListener) {
-            listener = context
-        } else {
-            throw RuntimeException("$context must implement FragmentListener")
-        }
+    binding.SwapFragment.setOnClickListener {
+        val mainActivity = requireActivity() as MainActivity
+        mainActivity.onSwapFragmentsPosition()
     }
-    private lateinit var change:Button
-    private lateinit var swap:Button
-    private var listener: FragmentListener? = null
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        init()
-    change.setOnClickListener {
-        listener?.onChangeBackgroundColors()
+        return binding.root
     }
-        swap.setOnClickListener {
-            listener?.onSwapFragments()
-        }
-
+    private fun generateRandomColor(): Int {
+        return Color.argb(255, Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
     }
-    private fun init(){
-        change = view?.findViewById(R.id.Change_Color)!!
-        swap = view?.findViewById(R.id.Swap_Fragment)!!
-    }
-    interface FragmentListener {
-        fun onSwapFragments()
-        fun onChangeBackgroundColors()
-    }
-
 }

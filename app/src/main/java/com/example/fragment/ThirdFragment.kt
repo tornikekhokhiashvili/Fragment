@@ -8,15 +8,28 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.fragment.databinding.FragmentThirdBinding
 
-class ThirdFragment : Fragment(R.layout.fragment_third) {
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
+class ThirdFragment : Fragment() {
+    private var _binding : FragmentThirdBinding? = null
+    private val binding get() = _binding!!
+    private var backgroundColor:Int = Color.WHITE
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_third, container, false)
+    ): View {
+        _binding = FragmentThirdBinding.inflate(inflater, container, false)
+        return binding.root
     }
+    fun changeBackgroundColor(color:Int) {
+        backgroundColor=color
+        binding.root.setBackgroundColor(color)
+    }
+    fun getBackgroundColor():Int{
+        return backgroundColor
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

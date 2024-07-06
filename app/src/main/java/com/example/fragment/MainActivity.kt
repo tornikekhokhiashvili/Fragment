@@ -1,20 +1,14 @@
 package com.example.fragment
 
 import android.os.Bundle
-import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.commit
 import com.example.fragment.databinding.ActivityMainBinding
-import kotlin.random.Random
-
-class MainActivity : AppCompatActivity(), FirstFragment.FragmentListener {
+class MainActivity : AppCompatActivity() {
     private lateinit var fragment1: FirstFragment
     private lateinit var fragment2: SecondFragment
     private lateinit var fragment3: ThirdFragment
-    private var color1 = 0
-    private var color2 = 0
-    private var isFirstLaunch = true
+    private var isSwapped = false
     private lateinit var binding:ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,71 +18,46 @@ class MainActivity : AppCompatActivity(), FirstFragment.FragmentListener {
         fragment1 = FirstFragment()
         fragment2 = SecondFragment()
         fragment3 = ThirdFragment()
-
-        if(savedInstanceState == null)  {
-            supportFragmentManager.commit {
-                add(
-                    R.id.fragment1_container,
-                    fragment1
-                )
-            }
-            supportFragmentManager.commit {
-                add(
-                    R.id.fragment2_container,
-                    fragment2
-                )
-            }
-            supportFragmentManager.commit {
-                add(
-                    R.id.fragment3_container,
-                    fragment3
-                )
-            }
-
-        } else {
-            isFirstLaunch = savedInstanceState.getBoolean("isFirstLaunch")
-            color1 = savedInstanceState.getInt("color1")
-            color2 = savedInstanceState.getInt("color2")
-            binding.fragment2Container.setBackgroundColor(color1)
-            binding.fragment3Container.setBackgroundColor(color2)
-            if(!isFirstLaunch){
-                supportFragmentManager.commit {
-                    replace(binding.fragment2Container.id,ThirdFragment())
-                        replace(binding.fragment3Container.id,SecondFragment())
-                }
-            }
-        }
-
-
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment1_container, fragment1)
+            .replace(R.id.fragment2_container, fragment2)
+            .replace(R.id.fragment3_container, fragment3)
+            .commit()
     }
 
-    override fun onSwapFragments() {
-        val transaction = supportFragmentManager.beginTransaction()
-        if (isFirstLaunch) {
-            transaction.replace(R.id.fragment2_container,ThirdFragment())
-                .replace(R.id.fragment3_container,SecondFragment())
-                .commit()
+    fun onChangeFragmentColor(color1: Int, color2: Int) {
+        fragment2.changeBackgroundColor(color1)
+        fragment3.changeBackgroundColor(color2)
+    }
 
-        } else {
-            transaction.replace(R.id.fragment2_container,SecondFragment())
-                .replace(R.id.fragment3_container,ThirdFragment())
-                .commit()
-        }
-
-        isFirstLaunch = !isFirstLaunch
+    fun onSwapFragmentsPosition() {
+        val fragment2Container = fragment2.view
+        val fragment3Container = fragment3.view
+        val parent2 = fragment2Container?.parent as? ViewGroup
+        val parent3 = fragment3Container?.parent as? ViewGroup
+        parent2?.removeView(fragment2Container)
+        parent3?.removeView(fragment3Container)
+        parent2?.addView(fragment3Container)
+        parent3?.addView(fragment2Container)
+        isSwapped = !isSwapped
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean("isFirstLaunch", isFirstLaunch)
-        outState.putInt("color1", color1)
-        outState.putInt("color2", color2)
-    }
-    override fun onChangeBackgroundColors() {
-       color1 = android.graphics.Color.argb(255, Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
-       color2 = android.graphics.Color.argb(255, Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
-       binding.fragment2Container.setBackgroundColor(color1)
-       binding.fragment3Container.setBackgroundColor(color2)
+        outState.putInt("color1", fragment2.getBackgroundColor())
+        outState.putInt("color2", fragment3.getBackgroundColor())
+        outState.putBoolean("isSwapped", isSwapped)
     }
 
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val color1 = savedInstanceState.getInt("color1")
+        val color2 = savedInstanceState.getInt("color2")
+        onChangeFragmentColor(color1, color2)
+
+        val fragmentSwapFlag = savedInstanceState.getBoolean("isSwapped")
+        if (fragmentSwapFlag) {
+            onSwapFragmentsPosition()
+        }
+    }
 }
